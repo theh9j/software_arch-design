@@ -1,0 +1,40 @@
+header div {
+    display: block;
+    width: 100%;
+    background: #2a559b;
+    background: linear-gradient(180deg, rgba(42, 85, 155, 1) 0%, rgba(87, 167, 199, 1) 50%, rgba(83, 237, 234, 1) 100%);
+    padding-top: 20px;
+    height: 220px;
+}
+
+header h1 {
+    text-shadow: rgb(20, 20, 20) 1px 1px 1px;
+    color: white;
+    margin-left: 50px;
+}
+
+header nav {
+    display: flex;
+    justify-content: center;   /* center horizontally */
+    align-items: flex-end;     /* push to bottom vertically */
+    height: 120px;             /* or any fixed height */
+}
+
+header nav a {
+    border-radius: 60px;
+    background: rgba(220, 220, 220, 0.6);
+    padding: 15px;
+    margin-inline: 10px;
+    margin-bottom: 10px;
+    color: black;
+    text-decoration: none;
+    font-weight: 600;
+    font-style: italic;
+    transition: 0.2s;
+}
+
+header nav a:hover {
+    padding: 25px;
+    margin-bottom: 2px;
+    transition: 0.2s;
+}
