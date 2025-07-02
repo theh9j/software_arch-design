@@ -36,7 +36,6 @@ class User extends Account {
 
     public function __construct($name, $dob) {
         parent::__construct($name, $dob);
-        $this->dob = $dob;
         $this->uniqid = UniqueID();
         $_SESSION["id"] = $this->uniqid;
     }
@@ -61,10 +60,12 @@ class User extends Account {
 }
 
 class Manager extends Account {
+    public function __construct($name, $dob) {
+        parent::__construct($name, $dob);
+    }
 
-
-    public function __constract() {
-
+    public function updateDob($newDob) {
+        $this->dob = $newDob;
     }
 }
 
