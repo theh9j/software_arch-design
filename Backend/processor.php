@@ -5,10 +5,13 @@ abstract class Account {
     private string $name;
     private string $dob;
     private string $address = "Not defined";
+    protected string $uniqid;
 
     public function __construct($name, $dob) {
         $this->name = $name;
         $this->dob = $dob;
+        $this->uniqid = UniqueID();
+        $_SESSION["id"] = $this->uniqid;
     }
 
     public function getAddress() {
@@ -27,21 +30,19 @@ abstract class Account {
         $this->name = $newName;
     }
 
+    public function getID() {
+        return $this->uniqid;
+    }
+
     abstract public function updateDob($newDob);
 }
 
 class User extends Account {
     private int $changeCount = 0;
-    private string $uniqid;
 
     public function __construct($name, $dob) {
         parent::__construct($name, $dob);
-        $this->uniqid = UniqueID();
-        $_SESSION["id"] = $this->uniqid;
-    }
-
-    public function getID() {
-        return $this->uniqid;
+        
     }
 
     public function getDob() {
@@ -62,15 +63,31 @@ class User extends Account {
 class Manager extends Account {
     public function __construct($name, $dob) {
         parent::__construct($name, $dob);
+        $this->uniqid = parent::getID() . "ADMIN";
+        $_SESSION["id"] = $this->uniqid;
     }
 
     public function updateDob($newDob) {
         $this->dob = $newDob;
     }
+
+    public function deleteAccount(&$accounts, $targetId) {
+        foreach ($accounts as $index => $account) {
+            if (str_ends_with($account->getID(), "ADMIN")) {
+                continue;
+            }
+            if ($account->getID() === $targetId) {
+                $nam = $account->getName();
+                unset($accounts[$index]);
+                return "Account with name $nam has been deleted.";
+            }
+        }
+        return "Deletion failed: Either not found or is an ADMIN account.";
+    }
 }
 
 function UniqueID($length = 10) {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzBCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen($characters);
     $randomString = '';
 
@@ -81,17 +98,28 @@ function UniqueID($length = 10) {
     return $randomString;
 }
 
+
+
+
 function Processor() {
     $users = [];
     $users[] = new User("James", "12-22-2004");
     $users[] = new User("Alice", "09-02-2000");
+    $users[] = new Manager("Tam", "02-12-2002");
+    $mana = new Manager("Bob", "02-12-2002");
 
     foreach ($users as $user) {
         if ($user->getID() === $_SESSION['id']) {
-            $name = $user->getName();
+            $name = $user->getID();
             echo "Hello, $name";
         }
     }
+
+    $rep2 = $mana->getID();
+    echo $rep2;
+
+    $rep = $mana->deleteAccount($users, $users[0]->getID());
+    echo $rep;
 }
 
 Processor();
